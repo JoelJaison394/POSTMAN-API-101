@@ -118,6 +118,20 @@ router.put('/api/book/:id', async (req, res) => {
     }
   });
 
+  router.delete('/api/book/:id', async (req, res) => {
+    try {
+      const { id } = req.params;
+      const book = await Book.findByIdAndDelete(id);
+      if (!book) {
+        return res.status(404).json({ error: 'Book not found' });
+      }
+      return res.status(200).json({ success: true });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  });
+  
+
 app.use('/', router);
 
 connectDB().then(() => {
