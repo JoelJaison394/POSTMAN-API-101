@@ -146,7 +146,7 @@ router.put('/api/book/:id', async (req, res) => {
   };
 
 //public route
-router.post('/students', async (req, res) => {
+router.post('/api/students', async (req, res) => {
     try {
       const { name, age, email } = req.body;
       
