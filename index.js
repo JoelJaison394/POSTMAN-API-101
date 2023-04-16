@@ -171,10 +171,21 @@ router.post('/api/students', async (req, res) => {
       });
     }
   });
-  
 
+  // To get all students
+  router.get('/students', async (req, res) => {
+    try {
+      const students = await Student.find();
+      return res.status(200).json({
+        success: true,
+        students,
+      });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  });
   
-
+  
 app.use('/', router);
 
 connectDB().then(() => {
