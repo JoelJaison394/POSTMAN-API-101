@@ -173,7 +173,7 @@ router.post('/api/students', async (req, res) => {
   });
 
   // To get all students
-  router.get('/students', async (req, res) => {
+  router.get('/api/students', async (req, res) => {
     try {
       const students = await Student.find();
       return res.status(200).json({
