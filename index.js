@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 
 //models
 const Book = require('./models/books');
-const Student = require('../models/student');
+const Student = require('./models/student');
 
 const app = express();
 
