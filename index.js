@@ -2,7 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 
+//models
 const Book = require('./models/books');
+const Student = require('../models/student');
 
 const app = express();
 
@@ -24,6 +26,7 @@ app.use(express.json());
 
 const router = express.Router();
 
+// BASIC  [BOOKS]
 router.route("/api/book")
 .get(async (req, res) => {
     try {
@@ -130,6 +133,46 @@ router.put('/api/book/:id', async (req, res) => {
       return res.status(500).json({ error: error.message });
     }
   });
+
+//INTERMIDIATE [STUDENT]
+
+//middlewares
+  const apiKeyMiddleware = (req, res, next) => {
+    const apiKey = req.headers['x-api-key'];
+    if (apiKey !== process.env.API_KEY) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    next();
+  };
+
+//public route
+router.post('/students', async (req, res) => {
+    try {
+      const { name, age, email } = req.body;
+      
+      // Validate input
+      const student = new Student({ name, age, email });
+      await student.validate();
+      
+      // Save student to database
+      await student.save();
+      
+      return res.status(201).json({
+        success: true,
+        message: 'Student added successfully',
+        data: student,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        success: false,
+        message: 'Error adding student',
+        error: error.message,
+      });
+    }
+  });
+  
+
   
 
 app.use('/', router);
