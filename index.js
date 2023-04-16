@@ -89,6 +89,35 @@ router.route("/api/book")
     }
   });
 
+  // Update a book's details by ID
+router.put('/api/book/:id', async (req, res) => {
+    const { id } = req.params;
+  
+    try {
+      const book = await Book.findById(id);
+  
+      if (!book) {
+        return res.status(404).json({ error: 'Book not found' });
+      }
+  
+      book.title = req.body.title || book.title;
+      book.author = req.body.author || book.author;
+      book.description = req.body.description || book.description;
+      book.isbn = req.body.isbn || book.isbn;
+      book.publishedDate = req.body.publishedDate || book.publishedDate;
+      book.updatedAt = Date.now();
+  
+      const updatedBook = await book.save();
+  
+      return res.status(200).json({
+        success: true,
+        book: updatedBook,
+      });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  });
+
 app.use('/', router);
 
 connectDB().then(() => {
