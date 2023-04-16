@@ -25,13 +25,22 @@ app.use(express.json());
 const router = express.Router();
 
 router.route("/api/book")
-  .get(async (req, res) => {
+.get(async (req, res) => {
     try {
-      const books = await Book.find().sort({ createdAt: -1 });
+      const { title } = req.query;
+      let books;
+
+      if (title) {
+        // Search for books with a matching title
+        books = await Book.find({ title: { $regex: title, $options: 'i' } }).sort({ createdAt: -1 });
+      } else {
+        // Retrieve all books
+        books = await Book.find().sort({ createdAt: -1 });
+      }
 
       return res.status(200).json({
         success: true,
-        books
+        books,
       });
     } catch (error) {
       return res.status(500).json({ error: error.message });
