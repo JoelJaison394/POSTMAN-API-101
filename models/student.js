@@ -27,12 +27,6 @@ const studentSchema = new Schema({
       },
       message: 'Please enter a valid email'
     }
-  },
-  address: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 100
   }
 });
 
