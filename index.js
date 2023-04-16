@@ -33,17 +33,34 @@ router.route("/api/book")
       if (title && author) {
         // Search for books with a matching title and author
         books = await Book.find({
-          $or: [
+          $and: [
             { title: { $regex: title, $options: 'i' } },
-            { author: { $regex: author, $options: 'i' } },
+            {
+              $or: [
+                { author: { $regex: author, $options: 'i' } },
+                { author: { $exists: false } },
+              ],
+            },
           ],
         }).sort({ createdAt: -1 });
+
+        // Check if the author matches the book title
+        for (let book of books) {
+          if (book.author.toLowerCase() !== author.toLowerCase()) {
+            return res.status(400).json({ error: 'Author not found for this title' });
+          }
+        }
       } else if (title) {
         // Search for books with a matching title
         books = await Book.find({ title: { $regex: title, $options: 'i' } }).sort({ createdAt: -1 });
       } else if (author) {
         // Search for books with a matching author
-        books = await Book.find({ author: { $regex: author, $options: 'i' } }).sort({ createdAt: -1 });
+        books = await Book.find({
+          $or: [
+            { author: { $regex: author, $options: 'i' } },
+            { author: { $exists: false } },
+          ],
+        }).sort({ createdAt: -1 });
       } else {
         // Retrieve all books
         books = await Book.find().sort({ createdAt: -1 });
