@@ -184,6 +184,22 @@ router.post('/api/students', async (req, res) => {
       return res.status(500).json({ error: error.message });
     }
   });
+
+  app.get('/thanks', (req, res) => {
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>API 101 - POSTMAN</title>
+        </head>
+        <body>
+          <h3>This messsage is from myself and from the postman group</h1>
+          <p>First of all I would like to thank everyone who have attended the session and make it a huge session, All of yours support help us to organise more such events in the future. I hope you got something out of that 3hr. I wish best for your future journey as a Devloper 💻</p>
+        </body>
+      </html>
+    `;
+    res.send(html);
+  });
   
   
 app.use('/', router);
